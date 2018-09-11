@@ -1,0 +1,42 @@
+target/**/*
+.DS_Store
+*/.DS_Store
+alf_data_dev/**/*
+target
+*/target/**/*
+*/target
+*/alf_data_dev
+*/alf_data_dev/**/*
+assembly/**/*
+assembly
+.settings
+.project
+.classpath
+*/.settings
+*/.projects
+*/.classpath
+bin/**/*
+bin
+src/log4j.properties
+alfresco.log
+*.jar
+
+# Eclipse
+.project
+.classpath
+.settings/
+ 
+# IntelliJ
+.idea
+*.iml
+*.ipr
+/projects/solr/overlays
+/projects/solr4/overlays
+ 
+# other
+bin/
+.DS_Store
+*.class
+*.jar
+*.war
+*.ear
