@@ -28,7 +28,6 @@ where:
 * revisionHead if true (and exportVersion=true) then files are exported with head (latest) revision numbered, if set to false then the default numbering scheme used by the Alfresco Bulk Import tool is used (head revision is not numbered) - parameter **optional**, only used if exportVersion set, The default is _false_.
 * useNodeCache if true then a list of nodes to export is cached to the export area for future repeated use. Sometimes useful for large exports of data due to the transaction cache being full - parameter **optional**, The default is _false_.
 * nbOfThreads number of threads in the thread pool if none is given the default value is 1
-* nbOfTasks is the number or Callable instances, this means the total number of nodes is equally dispatched between the tasks, if none is given the default value is 2
 * exportChunkSize is the number of Nodes handled by each Task iteration. Default value is 10
 
 When the export is ended you will see in browser a message _"Process finished Successfully"_. Once this message is printed, look-up your content in the Alfresco Server in the {base} directory.
