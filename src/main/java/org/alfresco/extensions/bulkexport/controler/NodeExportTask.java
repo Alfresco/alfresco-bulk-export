@@ -94,7 +94,7 @@ public class NodeExportTask implements Callable<String> {
 
     private void doCreateFile(NodeRef file, String path) throws Exception {
         //get Informations
-        log.debug("doCreateFile (noderef)");
+        LOG.debug("doCreateFile (" + file.getId() + ")");
 
         // need these variables out of the try scope for debugging purposes when the exception is thrown
         String type = null;
@@ -105,7 +105,7 @@ public class NodeExportTask implements Callable<String> {
             String fname = this.fileFolder.createFullPath(path);
             log.debug("doCreateFile file =" + fname);
             if (this.dao.getContentAndStoreInFile(file, fname) == false) {
-                log.debug("doCreateFile ignore this file");
+                LOG.debug("doCreateFile ignore this file: " + fname);
                 return;
             }
             type = this.dao.getType(file);
@@ -133,7 +133,6 @@ public class NodeExportTask implements Callable<String> {
      */
     private void createFolder(NodeRef folder) throws Exception {
         //Get Data
-        log.debug("createFolder");
         String path = this.dao.getPath(folder);
         log.debug("createFolder path=" + path);
         String type = this.dao.getType(folder);
@@ -181,16 +180,15 @@ public class NodeExportTask implements Callable<String> {
         int logCount = nodesToExport.size();
         log.info("Running task " + taskNumber + " will export " + logCount + " nodes");
         final int NODES_TO_PROCESS = 100;
-        try {
-            for (NodeRef nodeRef : nodesToExport) {
-                if (Thread.currentThread().isInterrupted()) {
-                    log.error(Thread.currentThread().getName() + " interrupted");
-                    throw new InterruptedException();
-                }
+        for (NodeRef nodeRef : nodesToExport) {
+            try {
+                LOG.debug("Handling in task NodeRef: " + nodeRef.getId());
                 logCount--;
                 if (this.dao.isFolder(nodeRef)) {
+                    log.debug("NodeRef is folder: " + nodeRef.getId());
                     this.createFolder(nodeRef);
                 } else {
+                    LOG.debug("NodeRef is document: " + nodeRef.getId());
                     if (exportVersions) {
                         exportFullRevisionHistory(nodeRef);
                     } else {
@@ -200,10 +198,13 @@ public class NodeExportTask implements Callable<String> {
                 if (logCount % NODES_TO_PROCESS == 0) {
                     log.info("Task " + taskNumber + " has remaining nodes to process " + logCount);
                 }
+            } catch (InterruptedException e) {
+                LOG.info(Thread.currentThread().getName() + " interrupted");
+            } catch (Exception e) {
+                LOG.error("Error in task:" + taskNumber + " on Node: " + nodeRef.getId(), e);
             }
-        } catch (Exception e) {
-            log.error(e);
         }
+
         AuthenticationUtil.clearCurrentSecurityContext();
         return "Task " + taskNumber + " is finished";
     }
